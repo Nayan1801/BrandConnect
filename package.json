@@ -1,0 +1,10 @@
+{
+  "scripts": {
+  "tunnel": "ngrok http 5000"
+  },
+
+  "dependencies": {
+    "@ngrok/ngrok": "^1.5.1"
+  }
+  
+}
