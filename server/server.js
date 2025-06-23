@@ -14,10 +14,13 @@ app.use(cookieParser());
 import authRoutes from './routes/auth.js';
 import fbRoutes from './routes/fb.js';
 import messageRoutes from './routes/message.js';
+import fbWebhookRoutes from './routes/fbwebhook.js';
+
 
 app.use('/api/auth', authRoutes);
 app.use('/api/fb', fbRoutes);
 app.use('/api/messages', messageRoutes);
+app.use('/api/webhook', fbWebhookRoutes);
 
 app.get("/", (req, res) => res.send("API Working"));
 
