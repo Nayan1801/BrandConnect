@@ -2,6 +2,9 @@ import axios from 'axios';
 import { useEffect, useState } from 'react';
 import { useNavigate } from 'react-router-dom';
 
+const API_URL = import.meta.env.VITE_API_URL;
+
+
 export default function ConnectFB() {
   const [connected, setConnected] = useState(false);
   const [pageName, setPageName] = useState('');
@@ -11,7 +14,7 @@ export default function ConnectFB() {
 
   const checkConnection = async () => {
     try {
-      const res = await axios.get('http://localhost:5000/api/fb/status', {
+      const res = await axios.get(`${API_URL}/fb/status`, {
         headers: { Authorization: `Bearer ${token}` },
       });
 
@@ -38,13 +41,13 @@ export default function ConnectFB() {
     }
 
     // Redirect to server-side FB OAuth
-    window.location.href = `http://localhost:5000/api/fb/connect?token=${token}`;
+    window.location.href = `${API_URL}/fb/connect?token=${token}`;
   };
 
   const handleDisconnect = async () => {
   const token = localStorage.getItem('token'); // ✅ Get token inside the function
   try {
-    const res = await axios.delete('http://localhost:5000/api/fb/disconnect', {
+    const res = await axios.delete(`${API_URL}/fb/disconnect`, {
       headers: {
         Authorization: `Bearer ${token}`,
       },
