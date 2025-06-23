@@ -14,8 +14,7 @@ app.use(cookieParser());
 import authRoutes from './routes/auth.js';
 import fbRoutes from './routes/fb.js';
 import messageRoutes from './routes/message.js';
-import fbWebhookRoutes from './routes/fbwebhook.js';
-
+import fbWebhookRoutes from './routes/fbWebhooks.js';
 
 app.use('/api/auth', authRoutes);
 app.use('/api/fb', fbRoutes);
