@@ -1,7 +1,7 @@
 import axios from 'axios';
 import FBPage from '../models/FBPage.js';
 import jwt from 'jsonwebtoken';
-
+dotenv.config()
 
 export const connectPage = async (req, res) => {
   const token = req.query.token;
