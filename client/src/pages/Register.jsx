@@ -32,7 +32,7 @@ export default function Register() {
     const res = await register(form);
     if (res.ok) {
         navigate("/");
-        alert("Registered successfully (dummy)!");
+        alert("Registered successfully !");
     } 
     else {
         alert("Registration failed");

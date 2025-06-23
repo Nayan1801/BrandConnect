@@ -29,7 +29,7 @@
 //     </div>
 //   );
 // }
-
+const API_URL = import.meta.env.VITE_API_URL || 'http://localhost:5000/api';
 
 import React, { useEffect, useState } from 'react';
 import axios from 'axios';
@@ -44,7 +44,7 @@ export default function Dashboard() {
 
   const fetchConversations = async () => {
     try {
-      const res = await axios.get('http://localhost:5000/api/messages', {
+      const res = await axios.get(`${API_URL}/messages`, {
         headers: {
           Authorization: `Bearer ${localStorage.getItem('token')}`,
         },

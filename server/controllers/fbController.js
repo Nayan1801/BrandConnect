@@ -94,8 +94,8 @@ export const fbCallback = async (req, res) => {
   //   name: page.name,
   //   user: req.user?.id, // Use JWT middleware to get user
   // });
-
-  return res.redirect('http://localhost:5173/dashboard');
+  const frontendURL = process.env.FRONTEND_URL || 'http://localhost:5173';
+  return res.redirect(`${frontendURL}/dashboard`);
 
   } catch (error) {
     console.error('Facebook callback error:', error.response?.data || error.message);
