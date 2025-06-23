@@ -6,7 +6,7 @@ const router = express.Router();
 
 // ✅ Webhook Verification
 router.get('/', (req, res) => {
-  const VERIFY_TOKEN = process.env.VERIFY_TOKEN || 'richpanel_dev_verify';
+  const VERIFY_TOKEN = process.env.FB_VERIFY_TOKEN || 'richpanel_dev_verify';
 
   const mode = req.query['hub.mode'];
   const token = req.query['hub.verify_token'];
@@ -24,6 +24,7 @@ router.get('/', (req, res) => {
 
 // ✅ Message Receiver
 router.post('/', async (req, res) => {
+  console.log("📩 Received webhook POST:", JSON.stringify(req.body, null, 2)); 
   const body = req.body;
 
   if (body.object !== 'page') return res.sendStatus(404);
