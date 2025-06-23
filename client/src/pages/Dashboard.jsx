@@ -29,8 +29,7 @@
 //     </div>
 //   );
 // }
-import dotenv from 'dotenv';
-dotenv.config()
+
 const API_URL = import.meta.env.VITE_API_URL || 'http://localhost:5000/api';
 
 import React, { useEffect, useState } from 'react';
