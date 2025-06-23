@@ -1,0 +1,7 @@
+{
+  "rewrites": [
+    { "source": "/dashboard", "destination": "/" },
+    { "source": "/connect-fb", "destination": "/" },
+    { "source": "/:path*", "destination": "/" }
+  ]
+}
