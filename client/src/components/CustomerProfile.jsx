@@ -30,6 +30,7 @@
 import React from 'react';;
 
 export default function CustomerProfile({ customer }) {
+  if (!customer) return <div className="italic text-center mt-20">No customer selected</div>;
   return (
     <div>
       <div className="text-xl font-semibold mb-4">Customer Info</div>

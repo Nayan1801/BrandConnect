@@ -1,7 +1,7 @@
 import { useEffect, useState } from 'react';
 import axios from 'axios';
 import MessageItem from './MessageItem';
-export default function MessageList({ onSelect, selectedId }) {
+export default function MessageList({ conversations, onSelect, selectedId }) {
   const [conversations, setConversations] = useState([]);
    const [error, setError] = useState(false);  
   useEffect(() => {

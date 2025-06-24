@@ -63,71 +63,129 @@ import axios from 'axios';
 // }
 
 
+// export default function ConversationView({ selectedConversation }) {
+//   const [messages, setMessages] = useState([]);
+//   const [replyText, setReplyText] = useState('');
+//   const [error, setError] = useState('');
+
+//   useEffect(() => {
+//     const fetchConversation = async () => {
+//       try {
+//         const res = await axios.get(`/api/messages/${selectedConversation._id}`, {
+//           headers: { Authorization: `Bearer ${localStorage.getItem('token')}` },
+//         });
+//         setMessages(res.data);
+//       } catch (err) {
+//         setError('Failed to load messages.');
+//       }
+//     };
+
+//     if (selectedConversation) fetchConversation();
+//   }, [selectedConversation]);
+
+//   const handleSend = async () => {
+//     try {
+//       if (!replyText.trim()) return;
+
+//       await axios.post(
+//         `/api/messages/${selectedConversation._id}/reply`,
+//         { message: replyText },
+//         {
+//           headers: { Authorization: `Bearer ${localStorage.getItem('token')}` },
+//         }
+//       );
+
+//       setMessages([...messages, { text: replyText, fromAgent: true }]);
+//       setReplyText('');
+//     } catch (err) {
+//       console.error('Failed to send reply:', err);
+//       alert('Failed to send message.');
+//     }
+//   };
+
+//   if (!selectedConversation) return <div className="p-4">Select a conversation</div>;
+//   if (error) return <div className="p-4 text-red-600">{error}</div>;
+
+//   return (
+//     <div className="flex flex-col h-full justify-between border-l p-4">
+//       <div className="flex-1 overflow-y-auto space-y-2">
+//         {messages.map((msg, index) => (
+//           <div key={index} className={`p-3 rounded ${msg.fromAgent ? 'bg-blue-200 self-end' : 'bg-gray-200 self-start'}`}>
+//             {msg.text}
+//           </div>
+//         ))}
+//       </div>
+//       <div className="flex mt-4">
+//         <input
+//           value={replyText}
+//           onChange={(e) => setReplyText(e.target.value)}
+//           className="flex-1 p-2 border border-gray-300 rounded-l"
+//           placeholder="Type your message..."
+//         />
+//         <button onClick={handleSend} className="bg-blue-600 text-white px-4 rounded-r">
+//           Send
+//         </button>
+//       </div>
+//     </div>
+//   );
+// }
+
+
+import React, { useEffect, useState } from 'react';
+import axios from 'axios';
+
 export default function ConversationView({ selectedConversation }) {
-  const [messages, setMessages] = useState([]);
-  const [replyText, setReplyText] = useState('');
+  const API_URL = import.meta.env.VITE_API_URL;
+  const [msgs, setMsgs] = useState([]);
+  const [input, setInput] = useState('');
   const [error, setError] = useState('');
 
   useEffect(() => {
-    const fetchConversation = async () => {
-      try {
-        const res = await axios.get(`/api/messages/${selectedConversation._id}`, {
-          headers: { Authorization: `Bearer ${localStorage.getItem('token')}` },
-        });
-        setMessages(res.data);
-      } catch (err) {
-        setError('Failed to load messages.');
-      }
-    };
-
-    if (selectedConversation) fetchConversation();
+    if (!selectedConversation) return;
+    axios.get(`${API_URL}/messages/${selectedConversation._id}`, {
+      headers: { Authorization: `Bearer ${localStorage.getItem('token')}` }
+    })
+    .then(res => setMsgs(res.data))
+    .catch(() => setError('Failed to load messages.'));
   }, [selectedConversation]);
 
-  const handleSend = async () => {
-    try {
-      if (!replyText.trim()) return;
-
-      await axios.post(
-        `/api/messages/${selectedConversation._id}/reply`,
-        { message: replyText },
-        {
-          headers: { Authorization: `Bearer ${localStorage.getItem('token')}` },
-        }
-      );
-
-      setMessages([...messages, { text: replyText, fromAgent: true }]);
-      setReplyText('');
-    } catch (err) {
-      console.error('Failed to send reply:', err);
-      alert('Failed to send message.');
-    }
+  const handleSend = () => {
+    if (!input.trim()) return;
+    axios.post(`${API_URL}/messages/${selectedConversation._id}/reply`,
+      { message: input },
+      { headers: { Authorization: `Bearer ${localStorage.getItem('token')}` } })
+    .then(() => {
+      setMsgs(prev => [...prev, { text: input, fromAgent: true, createdAt: new Date() }]);
+      setInput('');
+    })
+    .catch(() => setError('Send failed.'));
   };
 
-  if (!selectedConversation) return <div className="p-4">Select a conversation</div>;
-  if (error) return <div className="p-4 text-red-600">{error}</div>;
-
+  if (!selectedConversation) return <div className="p-6">Select a conversation.</div>;
   return (
-    <div className="flex flex-col h-full justify-between border-l p-4">
-      <div className="flex-1 overflow-y-auto space-y-2">
-        {messages.map((msg, index) => (
-          <div key={index} className={`p-3 rounded ${msg.fromAgent ? 'bg-blue-200 self-end' : 'bg-gray-200 self-start'}`}>
-            {msg.text}
+    <div className="flex flex-col h-full p-4">
+      {error && <div className="text-red-600">{error}</div>}
+      <div className="flex-1 overflow-y-auto space-y-2 mb-4">
+        {msgs.map((m,i) => (
+          <div key={i} className={`p-2 rounded max-w-md ${
+            m.fromAgent ? 'bg-blue-200 ml-auto text-right' : 'bg-gray-200'
+          }`}>
+            {m.text}
           </div>
         ))}
       </div>
-      <div className="flex mt-4">
+      <div className="flex">
         <input
-          value={replyText}
-          onChange={(e) => setReplyText(e.target.value)}
-          className="flex-1 p-2 border border-gray-300 rounded-l"
-          placeholder="Type your message..."
+          value={input}
+          onChange={(e) => setInput(e.target.value)}
+          className="flex-1 border px-2 py-1"
+          placeholder="Type your reply..."
         />
-        <button onClick={handleSend} className="bg-blue-600 text-white px-4 rounded-r">
-          Send
-        </button>
+        <button
+          onClick={handleSend}
+          className="bg-blue-600 text-white px-4 ml-2 rounded"
+        >Send</button>
       </div>
     </div>
   );
 }
-
-

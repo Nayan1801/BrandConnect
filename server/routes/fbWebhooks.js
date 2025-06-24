@@ -50,26 +50,32 @@ router.post('/', async (req, res) => {
         }
 
         // ✅ Check for existing conversation
-        let conversation = await Conversation.findOne({ senderId, pageId: pageID });
+       // ✅ Check for existing conversation (24-hour window)
+        let conversation = await Conversation.findOne({ senderId, pageId: pageID }).sort({ updatedAt: -1 });
 
-        if (conversation) {
+        if (conversation && new Date() - new Date(conversation.lastMessageAt) < 24 * 60 * 60 * 1000) {
+          // Continue the same conversation
           conversation.messages.push({
             text: messageText,
             fromAgent: false,
             createdAt: new Date(),
           });
+          conversation.lastMessageAt = new Date();
           await conversation.save();
         } else {
+          // Create new conversation
           await Conversation.create({
             user: fbPage.user,
             senderId,
-            senderName: 'FB User', // You can enhance this by calling Graph API to fetch name
+            senderName: 'FB User', // optionally fetch real name via Graph API
             pageId: pageID,
+            lastMessageAt: new Date(),
             messages: [
               { text: messageText, fromAgent: false, createdAt: new Date() }
             ]
           });
         }
+
 
         console.log(`✅ Message saved from ${senderId}: "${messageText}"`);
       }

@@ -7,14 +7,24 @@ const router = express.Router();
 
 router.get('/', verifyToken, async (req, res) => {
   try {
-    const conversations = await Conversation.find({ user: req.user.id })
-      .sort({ updatedAt: -1 });
+    const conversations = await Conversation.find({ user: req.user.id }).sort({ lastMessageAt: -1 });
 
-    res.json(conversations);
+    const data = conversations.map((c) => ({
+      _id: c._id,
+      senderId: c.senderId,
+      senderName: c.senderName,
+      pageId: c.pageId,
+      lastMessage: c.messages.length ? c.messages[c.messages.length - 1].text : '',
+      lastMessageAt: c.lastMessageAt,
+    }));
+
+    res.json(data);
   } catch (err) {
+    console.error(err);
     res.status(500).json({ message: 'Failed to load conversations' });
   }
 });
+
 
 router.get('/:id', verifyToken, async (req, res) => {
   const conversation = await Conversation.findOne({ _id: req.params.id, user: req.user.id });

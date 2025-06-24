@@ -25,3 +25,27 @@ export const fetchWithAuth = async (url, method = "GET", body = null) =>
     },
     ...(body && { body: JSON.stringify(body) }),
   });
+
+
+  export const getConversations = async (token) => {
+  const res = await axios.get(API_BASE, {
+    headers: { Authorization: `Bearer ${token}` },
+  });
+  return res.data;
+};
+
+export const getMessages = async (conversationId, token) => {
+  const res = await axios.get(`${API_BASE}/${conversationId}`, {
+    headers: { Authorization: `Bearer ${token}` },
+  });
+  return res.data;
+};
+
+export const replyToMessage = async (conversationId, message, token) => {
+  const res = await axios.post(
+    `${API_BASE}/${conversationId}/reply`,
+    { message },
+    { headers: { Authorization: `Bearer ${token}` } }
+  );
+  return res.data;
+};

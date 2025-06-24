@@ -12,7 +12,9 @@ const conversationSchema = new mongoose.Schema(
     senderId: String,         // FB User ID
     senderName: String,
     pageId: String,           // FB Page ID
-    messages: [messageSchema],
+    lastMessageAt: Date, // used for 24h logic
+    messages: [{ text: String, fromAgent: Boolean, createdAt: Date }],
+
   },
   { timestamps: true }
 );
