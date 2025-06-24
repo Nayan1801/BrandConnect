@@ -114,9 +114,10 @@ const API_URL = import.meta.env.VITE_API_URL || 'http://localhost:5000/api';
 
 import React, { useState, useEffect } from 'react';
 import axios from 'axios';
-import MessageList from './MessageList';
-import ConversationView from './ConversationView';
-import CustomerProfile from './CustomerProfile';
+import MessageList from '../components/MessageList';
+import ConversationView from '../components/ConversationView';
+import CustomerProfile from '../components/CustomerProfile';
+
 
 export default function Dashboard() {
   const API_URL = import.meta.env.VITE_API_URL;
